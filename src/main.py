@@ -9,8 +9,10 @@ def main():
         DB.loadData(db)
     else:
         print("La base de datos ya está cargada")
-    interfaz.inicializar()
-    
+    interfaz.initialize(db)
+
+# probar a borrar la base de datos y poner el logo de la app
+
 
 if __name__ == "__main__":
     main()
