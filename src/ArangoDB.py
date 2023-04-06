@@ -7,7 +7,7 @@ def connect():
     # Establecer conexión con ArangoDB
     conn = Connection(arangoURL='http://localhost:8529', username='root', password='root')
 
-    # Crear una nueva base de datos
+    # Crear una nueva base de datos en caso de que no este ya creada
     db_nombre = 'nombre_de_tu_base_de_datos'
     if not conn.hasDatabase('IMDB'):
         db = conn.createDatabase(name='IMDB')
@@ -17,6 +17,7 @@ def connect():
         print(f'La base de datos IMDB ya existe.')
 
 
+    # Crear una nueva colección en caso de que no este ya creada
     if not db.hasCollection("seriesYPeliculas"):
         db.createCollection(name="seriesYPeliculas")
     collection = db["seriesYPeliculas"]
