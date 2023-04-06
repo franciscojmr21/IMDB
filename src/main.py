@@ -3,7 +3,12 @@ import ArangoDB as DB
 
 def main():
     
-    DB.connect()
+    conn = DB.connect()
+    db = DB.create(conn)
+    if db['seriesYPeliculas'].count() == 0:
+        DB.loadData(db)
+    else:
+        print("La base de datos ya está cargada")
     interfaz.inicializar()
     
 

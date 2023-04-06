@@ -6,9 +6,11 @@ import csv
 def connect():
     # Establecer conexión con ArangoDB
     conn = Connection(arangoURL='http://localhost:8529', username='root', password='root')
+    return conn  
+
+def create(conn):
 
     # Crear una nueva base de datos en caso de que no este ya creada
-    db_nombre = 'nombre_de_tu_base_de_datos'
     if not conn.hasDatabase('IMDB'):
         db = conn.createDatabase(name='IMDB')
         print(f'Se ha creado la base de datos IMDB.')
@@ -24,12 +26,19 @@ def connect():
     else:
         print(f'La colección seriesYPeliculas ya existe.')
 
-    collection = db["seriesYPeliculas"]
+    return db
 
+
+
+def loadData(db):
+
+    collection = db["seriesYPeliculas"]
     
     
+
     # Abrir el archivo CSV
-    with open('../dataset/imdb.csv', newline='') as archivo_csv:
+    print('Cargando datos...')
+    with open('../dataset/imdb.csv', encoding='utf-8', newline='') as archivo_csv:
         # Crear un objeto reader de CSV
         lector_csv = csv.reader(archivo_csv, delimiter=',')
         
@@ -59,6 +68,8 @@ def connect():
 
             # Insertar el nuevo documento en la colección
             data.save()
+
+    print('Datos cargados.')
 
 
 
