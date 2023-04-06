@@ -169,7 +169,7 @@ def initialize(db):
 
 
 
-#select/option ultimos 5 campos
+#select/option ultimos 5 campos PRUEBA
 
     
     # Crear un botón para refrescar la ventana
