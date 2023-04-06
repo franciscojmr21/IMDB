@@ -7,7 +7,7 @@ def inicializar():
     ventana = tk.Tk()
 
     #cambiar el logo de la ventana
-    ventana.iconbitmap()
+    ventana.iconbitmap("imagenes/imdb.ico")
 
 
     ventana.title("IMDB")

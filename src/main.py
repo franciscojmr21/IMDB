@@ -1,8 +1,10 @@
 import interfaz as interfaz
+import ArangoDB as DB
 
 def main():
-    interfaz.inicializar()
     
+    DB.connect()
+    interfaz.inicializar()
     
 
 if __name__ == "__main__":
