@@ -120,7 +120,7 @@ def genreList(db):
             if j not in genre:
                 genre.append(j)
 
-    return ["ALL"]+sorted(genre)
+    return sorted(genre)
 
 def typeList(db):
     query = "FOR doc IN seriesYPeliculas RETURN doc.Type"
@@ -130,7 +130,7 @@ def typeList(db):
         if i not in type:
             type.append(i)
 
-    return ["ALL"]+sorted(type)
+    return sorted(type)
 
 
 def certificateList(db):
@@ -238,5 +238,9 @@ def maxEpisodes(db):
     max_value = max(cursor.result)
 
     return max_value
+
+def consulta(db, title, date, rate, votes, duration, episodes, genre, type, certificate, nudity, alcohol, violence, profanity, frightening):
+    print("Consulta")
+
 
 

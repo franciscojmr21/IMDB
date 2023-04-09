@@ -95,8 +95,11 @@ def initialize(db):
     etiqueta = ctk.CTkLabel(genreFrame, text="Genre:")
     etiqueta.pack()
 
+    all_button_genre = ctk.CTkButton(genreFrame, text="Select ALL")
+    all_button_genre.pack()
+
     # Crear el botón de selección
-    genreList = genreList = DB.genreList(db)
+    genreList = DB.genreList(db)
     lista_genre = tk.Listbox(genreFrame, selectmode=tk.MULTIPLE)
     for genre in genreList:
         lista_genre.insert(tk.END, genre)
@@ -108,7 +111,7 @@ def initialize(db):
     scrollbar.configure(command=lista_genre.yview)
 
     # Mostrar la lista de opciones en la ventana
-    lista_genre.pack(side="left")
+    lista_genre.pack()
 
     # INPUT TYPE
 
@@ -117,6 +120,9 @@ def initialize(db):
     typeFrame.pack(padx=10, pady=5, side="left")
     etiqueta = ctk.CTkLabel(typeFrame, text="Type:")
     etiqueta.pack()
+
+    all_button_type = ctk.CTkButton(typeFrame, text="Select ALL")
+    all_button_type.pack()
 
     # Crear el botón de selección
     typeList = DB.typeList(db)
@@ -250,7 +256,7 @@ def initialize(db):
             Votes = DB.minVotes(db)
             spinbox_votes.setInt(DB.minVotes(db))
 
-        #Genre = lista_genre.get()
+        Genre = lista_genre
 
         Duration = spinbox_duration.getInt()
         if(Duration>DB.maxDuration(db)):
@@ -260,7 +266,7 @@ def initialize(db):
             Duration = DB.minDuration(db)
             spinbox_duration.setInt(DB.minDuration(db))
 
-        #Type = lista_type.get()
+        Type = lista_type
         Certificate = combo_certificate.get()
 
         Episodes = spinbox_ep.getInt()
@@ -276,27 +282,45 @@ def initialize(db):
         Profanity = combo_profanity.get()
         Alcohol = combo_alcohol.get()
         Frightening = combo_frightening.get()
-        print("El valor es:", Title, " ", Date, " ", Rate, " ", Votes, " ", Duration, " ", Certificate, " ", Episodes, " ")
+
+        DB.consulta(db, Title, Date, Rate, Votes, Duration, Episodes, Genre, Type, Certificate, Nudity, Alcohol, Violence, Profanity, Frightening)
+
 
     def combobox_callback(choice):
         print("combobox dropdown clicked:", choice)
+
+    def select_all_type(valor):
+        global all_selected_types
+        if(not all_selected_types):
+            all_selected_types = True
+            for i in range(lista_type.size()):
+                lista_type.select_set(i)
+        elif(all_selected_types):
+            all_selected_types = False
+            for i in range(lista_type.size()):
+                lista_type.select_clear(i)
+
+    def select_all_genre(valor):
+        global all_selected_genres
+        if(not all_selected_genres):
+            all_selected_genres = True
+            for i in range(lista_genre.size()):
+                lista_genre.select_set(i)
+        elif(all_selected_genres):
+            all_selected_genres = False
+            for i in range(lista_genre.size()):
+                lista_genre.select_clear(i)
 
     # Función para mostrar u ocultar un elemento
     def mostrar_ocultar(valor):
         val_serie = 0
         serie_selcted = False
+        global all_selected_types
+        if(len(lista_type.curselection())==len(typeList)):
+            all_selected_types = True
+        else:
+            all_selected_types = False
 
-        if(len(lista_type.curselection())>=1):
-            global all_selected_types
-            if(0 in lista_type.curselection() and not all_selected_types):
-                all_selected_types = True
-                for i in range(lista_type.size()):
-                    lista_type.select_set(i)
-            elif(all_selected_types and (0 not in lista_type.curselection())):
-                all_selected_types = False
-                for i in range(lista_type.size()):
-                    lista_type.select_clear(i)
-    
         for i in range(lista_type.size()):
             if(lista_type.get(i) == "Series"):
                 val_serie = i
@@ -314,21 +338,9 @@ def initialize(db):
             etiqueta_ep.pack_forget()
             spinbox_ep.pack_forget()
         
-    def selectAllGenres(valor):
-        if(len(lista_genre.curselection())>=1):
-            global all_selected_genres
-            if(0 in lista_genre.curselection() and not all_selected_genres):
-                all_selected_genres = True
-                for i in range(lista_genre.size()):
-                    lista_genre.select_set(i)
-            elif(all_selected_genres and (0 not in lista_genre.curselection())):
-                all_selected_genres = False
-                for i in range(lista_genre.size()):
-                    lista_genre.select_clear(i)
-        
-
     lista_type.bind("<<ListboxSelect>>", mostrar_ocultar)
-    lista_genre.bind("<<ListboxSelect>>", selectAllGenres)
+    all_button_type.bind("<Button-1>", select_all_type)
+    all_button_genre.bind("<Button-1>", select_all_genre)
 
     #select/option ultimos 5 campos PRUEBA
 
