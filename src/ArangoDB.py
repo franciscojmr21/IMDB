@@ -120,7 +120,7 @@ def genreList(db):
             if j not in genre:
                 genre.append(j)
 
-    return sorted(genre)
+    return ["ALL"]+sorted(genre)
 
 def typeList(db):
     query = "FOR doc IN seriesYPeliculas RETURN doc.Type"
@@ -130,7 +130,7 @@ def typeList(db):
         if i not in type:
             type.append(i)
 
-    return sorted(type)
+    return ["ALL"]+sorted(type)
 
 
 def certificateList(db):
@@ -141,7 +141,7 @@ def certificateList(db):
         if i not in certificate:
             certificate.append(i)
 
-    return sorted(certificate)
+    return ["ALL"]+sorted(certificate)
 
 
 def nudityList(db):
@@ -154,7 +154,7 @@ def nudityList(db):
             if j not in nudity:
                 nudity.append(j)
 
-    return sorted(nudity)
+    return ["ALL"]+sorted(nudity)
 
 
 def violenceList(db):
@@ -167,7 +167,7 @@ def violenceList(db):
             if j not in violence:
                 violence.append(j)
 
-    return sorted(violence)
+    return ["ALL"]+sorted(violence)
 
 
 
@@ -182,7 +182,7 @@ def profanityList(db):
             if j not in profanity:
                 profanity.append(j)
 
-    return sorted(profanity)
+    return ["ALL"]+sorted(profanity)
 
 
 def alcoholList(db):
@@ -195,7 +195,7 @@ def alcoholList(db):
             if j not in alcohol:
                 alcohol.append(j)
 
-    return sorted(alcohol)
+    return ["ALL"]+sorted(alcohol)
 
 
 
@@ -209,7 +209,7 @@ def frighteningList(db):
             if j not in frightening:
                 frightening.append(j)
 
-    return sorted(frightening)
+    return ["ALL"]+sorted(frightening)
 
 def minDuration(db):
     query = "FOR doc IN seriesYPeliculas RETURN doc.Duration"

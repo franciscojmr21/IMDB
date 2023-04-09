@@ -5,6 +5,8 @@ from spinbox import FloatSpinbox
 
 c_negro = '#010101'
 c_gris = '#bbbbbb'
+all_selected_genres = False
+all_selected_types = False
  
 def initialize(db): 
     # Crear la ventana principal
@@ -167,7 +169,7 @@ def initialize(db):
 
     violenceFrame = ctk.CTkFrame(comboFrame, bg_color=c_negro)
     violenceFrame.grid(padx=10, pady=10, row=1, column=0)
-    etiqueta = ctk.CTkLabel(violenceFrame, text="Nudity:")
+    etiqueta = ctk.CTkLabel(violenceFrame, text="Violence:")
     etiqueta.pack()
 
     violenceList = DB.violenceList(db)
@@ -181,7 +183,7 @@ def initialize(db):
 
     profanityFrame = ctk.CTkFrame(comboFrame, bg_color=c_negro)
     profanityFrame.grid(padx=10, pady=10,row=1, column=1)
-    etiqueta = ctk.CTkLabel(profanityFrame, text="Nudity:")
+    etiqueta = ctk.CTkLabel(profanityFrame, text="Profanity:")
     etiqueta.pack()
 
     profanityList = DB.profanityList(db)
@@ -195,7 +197,7 @@ def initialize(db):
 
     alcoholFrame = ctk.CTkFrame(comboFrame, bg_color=c_negro)
     alcoholFrame.grid(padx=10, pady=10, row=0, column=2)
-    etiqueta = ctk.CTkLabel(alcoholFrame, text="Nudity:")
+    etiqueta = ctk.CTkLabel(alcoholFrame, text="Alcohol:")
     etiqueta.pack()
 
     alcoholList = DB.alcoholList(db)
@@ -209,7 +211,7 @@ def initialize(db):
 
     frighteningFrame = ctk.CTkFrame(comboFrame, bg_color=c_negro)
     frighteningFrame.grid(padx=10, pady=10, row=1, column=2)
-    etiqueta = ctk.CTkLabel(frighteningFrame, text="Nudity:")
+    etiqueta = ctk.CTkLabel(frighteningFrame, text="Frightening:")
     etiqueta.pack()
 
     frighteningList = DB.frighteningList(db)
@@ -283,6 +285,17 @@ def initialize(db):
     def mostrar_ocultar(valor):
         val_serie = 0
         serie_selcted = False
+
+        if(len(lista_type.curselection())>=1):
+            global all_selected_types
+            if(0 in lista_type.curselection() and not all_selected_types):
+                all_selected_types = True
+                for i in range(lista_type.size()):
+                    lista_type.select_set(i)
+            elif(all_selected_types and (0 not in lista_type.curselection())):
+                all_selected_types = False
+                for i in range(lista_type.size()):
+                    lista_type.select_clear(i)
     
         for i in range(lista_type.size()):
             if(lista_type.get(i) == "Series"):
@@ -300,8 +313,22 @@ def initialize(db):
             episodesFrame.grid_forget()
             etiqueta_ep.pack_forget()
             spinbox_ep.pack_forget()
+        
+    def selectAllGenres(valor):
+        if(len(lista_genre.curselection())>=1):
+            global all_selected_genres
+            if(0 in lista_genre.curselection() and not all_selected_genres):
+                all_selected_genres = True
+                for i in range(lista_genre.size()):
+                    lista_genre.select_set(i)
+            elif(all_selected_genres and (0 not in lista_genre.curselection())):
+                all_selected_genres = False
+                for i in range(lista_genre.size()):
+                    lista_genre.select_clear(i)
+        
 
     lista_type.bind("<<ListboxSelect>>", mostrar_ocultar)
+    lista_genre.bind("<<ListboxSelect>>", selectAllGenres)
 
     #select/option ultimos 5 campos PRUEBA
 
