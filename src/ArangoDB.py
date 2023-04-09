@@ -92,7 +92,7 @@ def minDate(db):
     cursor = db.AQLQuery(query, batchSize=100000000, rawResults=True)
     min_value = min(cursor.result)
 
-    return min_value
+    return int(min_value)
 
 
 def maxDate(db):
@@ -100,7 +100,7 @@ def maxDate(db):
     cursor = db.AQLQuery(query, batchSize=100000000, rawResults=True)
     max_value = max(cursor.result)
 
-    return max_value
+    return int(max_value)
 
 def minVotes(db):   
 

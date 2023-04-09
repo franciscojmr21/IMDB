@@ -47,12 +47,6 @@ def initialize(db):
     spinbox = tk.Spinbox(ventana, from_=DB.minVotes(db), to=1000000000, increment=1000)
     spinbox.pack()
     
-
-
-
-
-
-
     # INPUT GENERO
 
     # Crear el frame (generos)

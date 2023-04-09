@@ -1,4 +1,4 @@
-
+import ArangoDB as DB
 import tkinter as tk
 import customtkinter as ctk
 from spinbox import FloatSpinbox
@@ -15,7 +15,7 @@ def main():
 
 
 
-def initialize():   
+def initialize(db):   
     # Crear la ventana principal
     ventana = ctk.CTk()
 
@@ -56,7 +56,7 @@ def initialize():
     etiqueta = ctk.CTkLabel(filterFrame, text="Date:")
     etiqueta.pack()
     
-    spinbox = FloatSpinbox(filterFrame, width=120, min_value=5, max_value=10,  step_size=1)
+    spinbox = FloatSpinbox(filterFrame, width=120, min_value=DB.minDate(db), max_value=DB.maxDate(db),  step_size=1)
     spinbox.pack()
     
 
@@ -69,14 +69,9 @@ def initialize():
     # INPUT VOTES
     etiqueta = ctk.CTkLabel(filterFrame, text="Min Votes:")
     etiqueta.pack()
-    spinbox = FloatSpinbox(filterFrame, width=120, min_value=1000, max_value=1000000000, step_size=1000)
+    spinbox = FloatSpinbox(filterFrame, width=120, min_value=DB.minVotes(db), max_value=1000000000, step_size=1000)
     spinbox.pack()
     
-
-
-
-
-
     # INPUT GENERO
 
     # Crear el frame (generos)
@@ -88,7 +83,7 @@ def initialize():
     etiqueta.pack()
 
     # Crear el botón de selección
-    genreList = ['genre1', 'genre2', 'genre3', 'genre4', 'genre5', 'genre6', 'genre7', 'genre8', 'genre9', 'genre10', 'genre11', 'genre12', 'genre13', 'genre14', 'genre15', 'genre16', 'genre17', 'genre18', 'genre19', 'genre20', 'genre21', 'genre22', 'genre23', 'genre24', 'genre25', 'genre26', 'genre27', 'genre28', 'genre29', 'genre30', 'genre31', 'genre32', 'genre33', 'genre34', 'genre35', 'genre36', 'genre37', 'genre38', 'genre39', 'genre40', 'genre41', 'genre42']
+    genreList = genreList = DB.genreList(db)
     lista = tk.Listbox(genreFrame, selectmode=tk.MULTIPLE)
     for genre in genreList:
         lista.insert(tk.END, genre)
@@ -107,7 +102,7 @@ def initialize():
 
     etiqueta = ctk.CTkLabel(filterFrame, text="Min Duration:")
     etiqueta.pack()
-    spinbox = FloatSpinbox(filterFrame, width=120, min_value=0, max_value=270,  step_size=30)
+    spinbox = FloatSpinbox(filterFrame, width=120, min_value=DB.minDuration(db), max_value=DB.maxDuration(db),  step_size=30)
     spinbox.pack()
 
 
@@ -123,7 +118,7 @@ def initialize():
     etiqueta.pack()
 
     # Crear el botón de selección
-    typeList = ['Series', 'Film']
+    typeList = DB.typeList(db)
     lista2 = tk.Listbox(typeFrame, selectmode=tk.MULTIPLE)
     for type in typeList:
         lista2.insert(tk.END, type)
@@ -135,12 +130,7 @@ def initialize():
     scrollbar.configure(command=lista.yview)
 
     # Mostrar la lista de opciones en la ventana
-    
-
     lista2.pack()
-
-
-
 
     # INPUT CERTIFICATE
 
@@ -153,7 +143,7 @@ def initialize():
     etiqueta = ctk.CTkLabel(certificateFrame, text="Certificate:")
     etiqueta.pack()
 
-    certificateList = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+    certificateList = DB.certificateList(db)
     
     # Crear un Combobox y agregar las opciones
     combo = ctk.CTkComboBox(ventana, values=certificateList)
@@ -161,7 +151,7 @@ def initialize():
 
     # INPUT EPISODES
     etiqueta_ep = ctk.CTkLabel(filterFrame, text="Min Episodes:")
-    spinbox_ep = FloatSpinbox(filterFrame, width=120, min_value=5, max_value=300,  step_size=5)
+    spinbox_ep = FloatSpinbox(filterFrame, width=120, min_value=DB.minEpisodes(db), max_value=DB.maxEpisodes(db),  step_size=5)
     
 
 
