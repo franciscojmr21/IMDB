@@ -18,7 +18,11 @@ def initialize(db):
 
     # Crear un Frame para agregar el contenido
     frame = ctk.CTkFrame(canvas)
-    frame.pack(fill='both', expand=True)
+
+    resulFrame = ctk.CTkFrame(canvas)
+
+    etiqueta = ctk.CTkLabel(resulFrame, text="Resultado de la busqueda: ", font=("Arial", 15))
+    etiqueta.pack()
 
     #########Se añade el contenido de la ventana
 
@@ -283,8 +287,21 @@ def initialize(db):
         Alcohol = combo_alcohol.get()
         Frightening = combo_frightening.get()
 
-        DB.consulta(db, Title, Date, Rate, Votes, Duration, Episodes, Genre, Type, Certificate, Nudity, Alcohol, Violence, Profanity, Frightening)
+        results = DB.consulta(db, Title, Date, Rate, Votes, Duration, Episodes, Genre, Type, Certificate, Nudity, Alcohol, Violence, Profanity, Frightening)
+        
 
+        resultListbox = tk.Listbox(resulFrame)
+        for result in results:
+            resultListbox.insert(tk.END, result)
+        resultScrollbar = tk.Scrollbar(resulFrame, orient="vertical", command=resultListbox.yview)
+        
+        ancho = frame.winfo_width()
+        alto = frame.winfo_height()
+
+        resultListbox.config(yscrollcommand=scrollbar.set, width=200, height=alto)
+        resultScrollbar.pack(side="right", fill="y")
+        resultListbox.pack(fill='both', expand=True)
+        
 
     def combobox_callback(choice):
         print("combobox dropdown clicked:", choice)
@@ -358,7 +375,10 @@ def initialize(db):
     canvas.create_window((0, 0), window=frame, anchor="nw")
     frame.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
 
- 
+    
+    frame.grid(row=0, column=0)
+    resulFrame.grid(row=1, column=0)
+
     ventana.mainloop()  
  
  
