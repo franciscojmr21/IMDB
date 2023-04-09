@@ -241,6 +241,7 @@ def maxEpisodes(db):
 
 def consulta(db, title, date, rate, votes, duration, episodes, genre, type, certificate, nudity, alcohol, violence, profanity, frightening):
     print("Consulta")
+    print("Título: ", title, "Fecha: ", date, "Puntuación: ", rate, "Votos: ", votes, "Duración: ", duration, "Episodios: ", episodes, "Certificado: ", certificate, "Nudity: ", nudity, "Alcohol: ", alcohol, "Violencia: ", violence, "Profanidad: ", profanity, "Miedo: ", frightening)
 
     conn = Connection(username="root", password="root")
     db = conn["IMDB"]
@@ -250,38 +251,45 @@ def consulta(db, title, date, rate, votes, duration, episodes, genre, type, cert
     else:
         print("La colección no existe.")
 
-    query = """
-            FOR doc IN seriesYPeliculas
+    # Construir la consulta
+    aql = """
+           FOR doc IN seriesYPeliculas
                 FILTER (@title == "" OR doc.Name LIKE CONCAT("%", @title, "%"))
                 FILTER (@date == "" OR doc.Date == @date)
                 FILTER (@rate == "" OR doc.Rate >= @rate)
                 FILTER (@votes == "" OR doc.Votes >= @votes)
                 FILTER (@duration == "" OR doc.Duration >= @duration)
                 FILTER (@episodes == "" OR doc.Episodes >= @episodes)
-                FILTER (@certificate == "" OR doc.Certificate == @certificate)
-                FILTER (@nudity == "" OR doc.Nudity == @nudity)
-                FILTER (@alcohol == "" OR doc.Alcohol == @alcohol)
-                FILTER (@violence == "" OR doc.Violence == @violence)
-                FILTER (@profanity == "" OR doc.Profanity == @profanity)
-                FILTER (@frightening == "" OR doc.Frightening == @frightening)
+                FILTER (@certificate == "ALL" OR doc.Certificate == @certificate)
+                FILTER (@nudity == "ALL" OR doc.Nudity == @nudity)
+                FILTER (@alcohol == "ALL" OR doc.Alcohol == @alcohol)
+                FILTER (@violence == "ALL" OR doc.Violence == @violence)
+                FILTER (@profanity == "ALL" OR doc.Profanity == @profanity)
+                FILTER (@frightening == "ALL" OR doc.Frightening == @frightening)
                 RETURN doc
-        """
-    cursor = db.AQLQuery(query, bindVars={
-        "Name": title,
-        "Date": date,
-        "Rate": rate,
-        "Votes": votes,
-        "Duration": duration,
-        "Episodes": episodes,
-        "Certificate": certificate,
-        "Nudity": nudity,
-        "Alcohol": alcohol,
-        "Violence": violence,
-        "Profanity": profanity,
-        "Frightening": frightening
-    })
+                """
 
-    return [doc for doc in cursor]
+    # Definir los parámetros de la consulta
+    bind_vars = {
+        "title": title,
+        "date": str(date),
+        "rate": rate,
+        "votes": votes,
+        "duration": duration,
+        "episodes": episodes,
+        "certificate": certificate,
+        "nudity": nudity,
+        "alcohol": alcohol,
+        "violence": violence,
+        "profanity": profanity,
+        "frightening": frightening
+        }
+
+    # Ejecutar la consulta
+    cursor = db.AQLQuery(aql, bindVars=bind_vars)
+    results = [document for document in cursor]
+    print(results)
+    return results
 
 
 
