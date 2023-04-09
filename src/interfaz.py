@@ -2,6 +2,8 @@ import customtkinter as ctk
 import tkinter as tk 
 import ArangoDB as DB
 from spinbox import FloatSpinbox
+from table import CTkTable
+import re
 
 c_negro = '#010101'
 c_gris = '#bbbbbb'
@@ -236,7 +238,6 @@ def initialize(db):
 # FUNCIONES AUXILIARES
 
     def getAllValues(db):
-        print("Buscar pulsado:")
         Title = caja_texto_title.get()
         
         Date = spinbox_date.getInt()
@@ -260,7 +261,10 @@ def initialize(db):
             Votes = DB.minVotes(db)
             spinbox_votes.setInt(DB.minVotes(db))
 
-        Genre = lista_genre
+        Genre = []
+        for i in range(lista_genre.size()):
+            if(lista_genre.selection_includes(i)):
+                Genre.append(lista_genre.get(i))
 
         Duration = spinbox_duration.getInt()
         if(Duration>DB.maxDuration(db)):
@@ -270,7 +274,11 @@ def initialize(db):
             Duration = DB.minDuration(db)
             spinbox_duration.setInt(DB.minDuration(db))
 
-        Type = lista_type
+        Type = []
+        for i in range(lista_type.size()):
+            if(lista_type.selection_includes(i)):
+                Type.append(lista_type.get(i))
+            lista_type.curselection()
         Certificate = combo_certificate.get()
 
         Episodes = spinbox_ep.getInt()
@@ -289,18 +297,13 @@ def initialize(db):
 
         results = DB.consulta(db, Title, Date, Rate, Votes, Duration, Episodes, Genre, Type, Certificate, Nudity, Alcohol, Violence, Profanity, Frightening)
         
-
-        resultListbox = tk.Listbox(resulFrame)
-        for result in results:
-            resultListbox.insert(tk.END, result)
-        resultScrollbar = tk.Scrollbar(resulFrame, orient="vertical", command=resultListbox.yview)
-        
-        ancho = frame.winfo_width()
-        alto = frame.winfo_height()
-
-        resultListbox.config(yscrollcommand=scrollbar.set, width=200, height=alto)
-        resultScrollbar.pack(side="right", fill="y")
-        resultListbox.pack(fill='both', expand=True)
+        # expresión regular para extraer la información de cada película
+        expresion = r"{.*?Name': '(.*?)', 'Date': '(.*?)', 'Rate': '(.*?)', 'Votes': (.*?), 'Genre': '(.*?)', 'Duration': (.*?), 'Type': '(.*?)', 'Certificate': '(.*?)', 'Episodes': (.*?), 'Nudity': '(.*?)', 'Violence': '(.*?)', 'Profanity': '(.*?)', 'Alcohol': '(.*?)', 'Frightening': '(.*?)'}"
+        # Buscar todas las coincidencias
+        coincidencias = re.findall(expresion, str(results))
+        headers = ["Title", "Date", "Rate", "Votes", "Categories", "Duration", "Type", "Certificate", "Episodes", "Nudity", "Violence", "Profanaty", "Alcohol", "Frightering"]
+        # Crear la tabla
+        CTkTable(resulFrame, headers, coincidencias)
         
 
     def combobox_callback(choice):

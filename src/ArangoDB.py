@@ -241,7 +241,7 @@ def maxEpisodes(db):
 
 def consulta(db, title, date, rate, votes, duration, episodes, genre, type, certificate, nudity, alcohol, violence, profanity, frightening):
     print("Consulta")
-    print("Título: ", title, "Fecha: ", date, "Puntuación: ", rate, "Votos: ", votes, "Duración: ", duration, "Episodios: ", episodes, "Certificado: ", certificate, "Nudity: ", nudity, "Alcohol: ", alcohol, "Violencia: ", violence, "Profanidad: ", profanity, "Miedo: ", frightening)
+    print("Título: ", title, "Fecha: ", date, "genre: ", genre, "Duración: ", duration, "Episodios: ", episodes, "Certificado: ", certificate, "Nudity: ", nudity, "Alcohol: ", alcohol, "Violencia: ", violence, "Profanidad: ", profanity, "Miedo: ", frightening)
 
     conn = Connection(username="root", password="root")
     db = conn["IMDB"]
@@ -260,6 +260,8 @@ def consulta(db, title, date, rate, votes, duration, episodes, genre, type, cert
                 FILTER (@votes == "" OR doc.Votes >= @votes)
                 FILTER (@duration == "" OR doc.Duration >= @duration)
                 FILTER (@episodes == "" OR doc.Episodes >= @episodes)
+                FILTER (doc.Genre IN @genre OR @genre == "")
+                FILTER (doc.Type IN @type OR @type == "")
                 FILTER (@certificate == "ALL" OR doc.Certificate == @certificate)
                 FILTER (@nudity == "ALL" OR doc.Nudity == @nudity)
                 FILTER (@alcohol == "ALL" OR doc.Alcohol == @alcohol)
@@ -277,6 +279,8 @@ def consulta(db, title, date, rate, votes, duration, episodes, genre, type, cert
         "votes": votes,
         "duration": duration,
         "episodes": episodes,
+        "genre": genre,
+        "type": type,
         "certificate": certificate,
         "nudity": nudity,
         "alcohol": alcohol,
@@ -289,7 +293,6 @@ def consulta(db, title, date, rate, votes, duration, episodes, genre, type, cert
     cursor = db.AQLQuery(aql, bindVars=bind_vars)
     results = [document for document in cursor]
     
-    print(results)
     return results
 
 
