@@ -143,6 +143,74 @@ def certificateList(db):
 
     return sorted(certificate)
 
+
+def nudityList(db):
+    query = "FOR doc IN seriesYPeliculas RETURN doc.Nudity"
+    cursor = db.AQLQuery(query, batchSize=100000000, rawResults=True)
+    nudity = []
+    for i in cursor.result:
+        nudities= i.split(",")
+        for j in nudities:
+            if j not in nudity:
+                nudity.append(j)
+
+    return sorted(nudity)
+
+
+def violenceList(db):
+    query = "FOR doc IN seriesYPeliculas RETURN doc.Violence"
+    cursor = db.AQLQuery(query, batchSize=100000000, rawResults=True)
+    violence = []
+    for i in cursor.result:
+        violences= i.split(",")
+        for j in violences:
+            if j not in violence:
+                violence.append(j)
+
+    return sorted(violence)
+
+
+
+
+def profanityList(db):
+    query = "FOR doc IN seriesYPeliculas RETURN doc.Profanity"
+    cursor = db.AQLQuery(query, batchSize=100000000, rawResults=True)
+    profanity = []
+    for i in cursor.result:
+        profanities= i.split(",")
+        for j in profanities:
+            if j not in profanity:
+                profanity.append(j)
+
+    return sorted(profanity)
+
+
+def alcoholList(db):
+    query = "FOR doc IN seriesYPeliculas RETURN doc.Alcohol"
+    cursor = db.AQLQuery(query, batchSize=100000000, rawResults=True)
+    alcohol = []
+    for i in cursor.result:
+        alcoholes= i.split(",")
+        for j in alcoholes:
+            if j not in alcohol:
+                alcohol.append(j)
+
+    return sorted(alcohol)
+
+
+
+def frighteningList(db):
+    query = "FOR doc IN seriesYPeliculas RETURN doc.Frightening"
+    cursor = db.AQLQuery(query, batchSize=100000000, rawResults=True)
+    frightening = []
+    for i in cursor.result:
+        frighten= i.split(",")
+        for j in frighten:
+            if j not in frightening:
+                frightening.append(j)
+
+    return sorted(frightening)
+
 def minDuration(db):
     query = "FOR doc IN seriesYPeliculas RETURN doc.Duration"
     cursor = db.AQLQuery(query, batchSize=100000000, rawResults=True)
