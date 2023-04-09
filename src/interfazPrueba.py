@@ -2,18 +2,11 @@ import ArangoDB as DB
 import tkinter as tk
 import customtkinter as ctk
 from spinbox import FloatSpinbox
+from PyQt5.QtWidgets import QApplication, QMainWindow, QScrollArea, QWidget
+
 
 c_negro = '#010101'
 c_gris = '#bbbbbb'
-
-
-def main():
-    initialize()
-
-
-
-
-
 
 def initialize(db):   
     # Crear la ventana principal
@@ -199,6 +192,9 @@ def initialize(db):
 
     # Ubicar el botón en la ventana
     boton.pack()
+
+    # Crear la barra de desplazamiento de la ventana
+
 
     # Iniciar el loop principal de la ventana
     ventana.mainloop()

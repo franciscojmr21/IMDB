@@ -1,4 +1,4 @@
-import interfazPrueba as interfaz
+import prueba2 as interfaz
 import ArangoDB as DB
 
 def main():
