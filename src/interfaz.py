@@ -106,6 +106,14 @@ def initialize(db):
     etiqueta = ctk.CTkLabel(typeFrame, text="Type:")
     etiqueta.pack()
 
+
+
+
+
+    
+
+
+
     # Crear el botón de selección
     typeList = DB.typeList(db)
     lista2 = tk.Listbox(typeFrame, selectmode=tk.MULTIPLE)
