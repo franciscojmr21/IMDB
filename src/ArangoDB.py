@@ -1,5 +1,5 @@
 from pyArango.connection import *
-from pyArango.collection import Collection, Field
+from pyArango.query import AQLQuery
 import csv
 
 
@@ -14,7 +14,7 @@ def create(conn):
     if not conn.hasDatabase('IMDB'):
         db = conn.createDatabase(name='IMDB')
         print(f'Se ha creado la base de datos IMDB.')
-    else:
+    else:  
         db = conn['IMDB']
         print(f'La base de datos IMDB ya existe.')
 
@@ -241,6 +241,47 @@ def maxEpisodes(db):
 
 def consulta(db, title, date, rate, votes, duration, episodes, genre, type, certificate, nudity, alcohol, violence, profanity, frightening):
     print("Consulta")
+
+    conn = Connection(username="root", password="root")
+    db = conn["IMDB"]
+
+    if "seriesYPeliculas" in db.collections:
+        print("La colección existe.")
+    else:
+        print("La colección no existe.")
+
+    query = """
+            FOR doc IN seriesYPeliculas
+                FILTER (@title == "" OR doc.Name LIKE CONCAT("%", @title, "%"))
+                FILTER (@date == "" OR doc.Date == @date)
+                FILTER (@rate == "" OR doc.Rate >= @rate)
+                FILTER (@votes == "" OR doc.Votes >= @votes)
+                FILTER (@duration == "" OR doc.Duration >= @duration)
+                FILTER (@episodes == "" OR doc.Episodes >= @episodes)
+                FILTER (@certificate == "" OR doc.Certificate == @certificate)
+                FILTER (@nudity == "" OR doc.Nudity == @nudity)
+                FILTER (@alcohol == "" OR doc.Alcohol == @alcohol)
+                FILTER (@violence == "" OR doc.Violence == @violence)
+                FILTER (@profanity == "" OR doc.Profanity == @profanity)
+                FILTER (@frightening == "" OR doc.Frightening == @frightening)
+                RETURN doc
+        """
+    cursor = db.AQLQuery(query, bindVars={
+        "Name": title,
+        "Date": date,
+        "Rate": rate,
+        "Votes": votes,
+        "Duration": duration,
+        "Episodes": episodes,
+        "Certificate": certificate,
+        "Nudity": nudity,
+        "Alcohol": alcohol,
+        "Violence": violence,
+        "Profanity": profanity,
+        "Frightening": frightening
+    })
+
+    return [doc for doc in cursor]
 
 
 

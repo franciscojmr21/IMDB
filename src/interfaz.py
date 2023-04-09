@@ -315,11 +315,6 @@ def initialize(db):
     def mostrar_ocultar(valor):
         val_serie = 0
         serie_selcted = False
-        global all_selected_types
-        if(len(lista_type.curselection())==len(typeList)):
-            all_selected_types = True
-        else:
-            all_selected_types = False
 
         for i in range(lista_type.size()):
             if(lista_type.get(i) == "Series"):
