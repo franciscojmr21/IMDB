@@ -44,15 +44,15 @@ def initialize(db):
     dateFrame.pack(padx=10, pady=10, side="left")
     etiqueta = ctk.CTkLabel(dateFrame, text="Date:")
     etiqueta.pack()
+
     spinbox = FloatSpinbox(dateFrame, width=120, min_value=DB.minDate(db), max_value=DB.maxDate(db),  step_size=1)
     spinbox.pack(side="left")
-    
     # INPUT RATE    
     rateFrame = ctk.CTkFrame(filterFrame, bg_color= c_negro)
     rateFrame.pack(padx=10, pady=10, side="left")
     etiqueta = ctk.CTkLabel(rateFrame, text="Min Rate:")
     etiqueta.pack()
-    spinbox = FloatSpinbox(rateFrame, width=120, min_value=0.0, max_value=10.0,  step_size=0.1, esInt= False) # AJUSTAR
+    spinbox = FloatSpinbox(rateFrame, width=120, min_value=0.0, max_value=10.0,  step_size=0.1, esInt= False)
     spinbox.pack(side="left")
 
     # INPUT VOTES
@@ -137,10 +137,9 @@ def initialize(db):
 
     # INPUT EPISODES
     episodesFrame = ctk.CTkFrame(filterFrame, bg_color= c_negro)
-    episodesFrame.pack(padx=10, pady=10, side="left")
     etiqueta_ep = ctk.CTkLabel(episodesFrame, text="Min Episodes:")
     spinbox_ep = FloatSpinbox(episodesFrame, width=120, min_value=DB.minEpisodes(db), max_value=DB.maxEpisodes(db),  step_size=5)
-    spinbox_ep.pack(side="left")
+
     
 
 
@@ -163,9 +162,11 @@ def initialize(db):
                 serie_selcted = True
         
         if(serie_selcted and len(lista2.curselection())==1):
-            etiqueta_ep.pack(side="left")
+            episodesFrame.pack(padx=10, pady=10, side="left")
+            etiqueta_ep.pack()
             spinbox_ep.pack(side="left")
         else:
+            episodesFrame.pack_forget()
             etiqueta_ep.pack_forget()
             spinbox_ep.pack_forget()
 
@@ -175,10 +176,10 @@ def initialize(db):
 
 
     # Añadir un botón a la ventana
-    boton = ctk.CTkButton(filterFrame, text="Buscar")
+    boton = ctk.CTkButton(frame, text="Buscar")
 
     # Ubicar el botón en la ventana
-    boton.pack(side="left")
+    boton.pack(side="bottom", padx=10, pady=10)
 
     ########FIN CONTENIDO VENTANA
 

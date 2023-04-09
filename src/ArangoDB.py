@@ -107,7 +107,6 @@ def minVotes(db):
     query = "FOR doc IN seriesYPeliculas RETURN doc.Votes"
     cursor = db.AQLQuery(query, batchSize=100000000, rawResults=True)
     min_value = min(cursor.result)
-    print(min_value)
 
     return min_value
 

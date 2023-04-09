@@ -30,11 +30,14 @@ class FloatSpinbox(customtkinter.CTkFrame):
         self.entry = customtkinter.CTkEntry(self, width=width-(2*height), height=height-6, border_width=0)
         self.entry.grid(row=0, column=1, columnspan=1, padx=3, pady=3, sticky="ew")
 
+
         self.add_button = customtkinter.CTkButton(self, text="+", width=height-6, height=height-6,command=self.add_button_callback)
         self.add_button.grid(row=0, column=2, padx=(0, 3), pady=3)
 
         # default value
         self.entry.insert(0, min_value)
+        
+
 
     def add_button_callback(self):
         if self.command is not None:
@@ -44,9 +47,15 @@ class FloatSpinbox(customtkinter.CTkFrame):
                 value = int(self.entry.get()) + self.step_size
             else:
                 value = round(float(self.entry.get()) + self.step_size, 1)
-            if (value <= self.max_value):
+            if (value <= self.max_value and value >= self.min_value):
                 self.entry.delete(0, "end")
                 self.entry.insert(0, value)
+            elif(value < self.min_value):
+                self.entry.delete(0, "end")
+                self.entry.insert(0, self.min_value)
+            else:
+                self.entry.delete(0, "end")
+                self.entry.insert(0, self.max_value)
         except ValueError:
             return
 
@@ -58,9 +67,15 @@ class FloatSpinbox(customtkinter.CTkFrame):
                 value = int(self.entry.get()) - self.step_size
             else:
                 value = round(float(self.entry.get()) - self.step_size, 1)
-            if (value >= self.min_value):
+            if (value >= self.min_value and value <= self.max_value):
                 self.entry.delete(0, "end")
                 self.entry.insert(0, value)
+            elif(value > self.max_value):
+                self.entry.delete(0, "end")
+                self.entry.insert(0, self.max_value)
+            else:
+                self.entry.delete(0, "end")
+                self.entry.insert(0, self.min_value)
         except ValueError:
             return
 
