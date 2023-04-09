@@ -288,6 +288,7 @@ def consulta(db, title, date, rate, votes, duration, episodes, genre, type, cert
     # Ejecutar la consulta
     cursor = db.AQLQuery(aql, bindVars=bind_vars)
     results = [document for document in cursor]
+    
     print(results)
     return results
 
