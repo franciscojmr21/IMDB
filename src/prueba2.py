@@ -1,7 +1,6 @@
 import ArangoDB as DB
 import customtkinter as ctk
-from spinbox import FloatSpinbox
-from PyQt5.QtWidgets import QApplication, QMainWindow, QScrollArea, QWidget, QVBoxLayout, QLabel, QFrame, QSpinBox, CTkTextbox
+from PyQt5.QtWidgets import QComboBox, QApplication, QMainWindow, QScrollArea, QWidget, QVBoxLayout, QLabel, QFrame, QSpinBox, QPushButton, QListWidget, QListWidgetItem, QDoubleSpinBox
 
 c_negro = '#010101'
 c_gris = '#bbbbbb'
@@ -59,20 +58,18 @@ def initialize(db):
     etiqueta = QLabel(genreFrame, text="Genre:")
     layout.addWidget(spinbox)
     genreList = genreList = DB.genreList(db)
-    lista = CTkTextbox(genreFrame, selectmode="multiple")
+    lista = QListWidget(genreFrame)
     for genre in genreList:
-        lista.insert("end", genre)
-    scrollbar = ctk.CTkScrollbar(genreFrame)
-    scrollbar.pack(side="right", fill="y") 
-    lista.config(yscrollcommand=scrollbar.set)
-    scrollbar.config(command=lista.yview)
+        item = QListWidgetItem(genre)
+        lista.addItem(item)
+    scrollbar = QScrollArea(genreFrame) 
     layout.addWidget(lista)
 
     # # INPUT DURATION
 
     etiqueta = QLabel(filterFrame, text="Min Duration:")
     layout.addWidget(etiqueta)
-    spinbox = FloatSpinbox(filterFrame, width=120, min_value=DB.minDuration(db), max_value=DB.maxDuration(db),  step_size=30)
+    spinbox = QDoubleSpinBox(filterFrame, width=120, minimum=DB.minDuration(db), maximum=DB.maxDuration(db))
     layout.addWidget(spinbox)
 
     # INPUT TYPE
@@ -86,15 +83,12 @@ def initialize(db):
 
     # Crear el botón de selección
     typeList = DB.typeList(db)
-    lista2 = tk.Listbox(typeFrame, selectmode=tk.MULTIPLE)
+    lista2 = QListWidget(typeFrame)
     for type in typeList:
-        lista2.insert("end", type)
+        lista2.addItem(type)
 
     # Crear la barra de desplazamiento
-    scrollbar = ctk.CTkScrollbar(typeFrame)
-    scrollbar.pack(side="right", fill="y")
-    lista2.config(yscrollcommand=scrollbar.set)
-    scrollbar.configure(command=lista.yview)
+    scrollbar = QScrollArea(typeFrame)
 
     # Mostrar la lista de opciones en la ventana
     layout.addWidget(lista2)
@@ -109,11 +103,11 @@ def initialize(db):
     certificateList = DB.certificateList(db)
 
     # Crear un Combobox y agregar las opciones
-    combo = ctk.CTkComboBox(certificateFrame, values=certificateList)
+    combo = QComboBox(certificateFrame, values=certificateList)
     layout.addWidget(combo)
 
     # Crear un botón de búsqueda
-    boton_buscar = ctk.CTkButton(ventana, text="Buscar", bg_color = c_gris, command=lambda: search(db, caja_texto.get(), spinbox.get(), spinbox_2.get(), lista.get(0, tk.END), spinbox_3.get(), lista2.get(0, tk.END), combo.get()))
+    boton_buscar = QPushButton(ventana, text="Buscar", bg_color = c_gris, command=lambda: search(db, caja_texto.get(), spinbox.get(), spinbox_2.get(), lista.get(0, tk.END), spinbox_3.get(), lista2.get(0, tk.END), combo.get()))
     layout.addWidget(boton_buscar)
 
     # Cerrar la conexión a la base de datos
