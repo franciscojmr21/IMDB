@@ -15,7 +15,7 @@ resultTable = None
 def initialize(db): 
     # Crear la ventana principal
     ventana = ctk.CTk()
-    ventana.geometry("1000x600")
+    ventana.geometry("1300x600")
     ventana.title("IMDB")
 
     canvas = ctk.CTkCanvas(ventana, borderwidth=0, highlightthickness=0)
