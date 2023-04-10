@@ -16,7 +16,10 @@ class CTkTable:
         # Agregar la tabla al canvas
         self.table = ttk.Treeview(self.canvas, columns=headers, show='headings')
         for header in headers:
-            self.table.heading(header, text=header.title())
+            self.table.heading(header, text=header.title(), anchor="center")
+
+        self.table.style = ttk.Style()
+        self.table.style.configure('Treeview.Heading', background='#000000', foreground='blue', font=('Arial', 12, 'bold'))
         for row in rows:
             self.table.insert('', 'end', values=row)
 
