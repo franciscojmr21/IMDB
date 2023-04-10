@@ -2,6 +2,7 @@ import customtkinter as ctk
 import tkinter as tk 
 import ArangoDB as DB
 from spinbox import FloatSpinbox
+from listBox import CTkListbox
 from table import CTkTable
 import re
 
@@ -107,7 +108,7 @@ def initialize(db):
 
     # Crear el botón de selección
     genreList = DB.genreList(db)
-    lista_genre = tk.Listbox(genreFrame, selectmode=tk.MULTIPLE)
+    lista_genre = CTkListbox(genreFrame, selectmode=tk.MULTIPLE, exportselection=False)
     for genre in genreList:
         lista_genre.insert(tk.END, genre)
 
@@ -133,7 +134,7 @@ def initialize(db):
 
     # Crear el botón de selección
     typeList = DB.typeList(db)
-    lista_type = tk.Listbox(typeFrame, selectmode=tk.MULTIPLE)
+    lista_type = CTkListbox(typeFrame, selectmode=tk.MULTIPLE, exportselection=False)
     for type in typeList:
         lista_type.insert(tk.END, type)
 
@@ -232,9 +233,6 @@ def initialize(db):
     # Crear un Combobox y agregar las opciones
     combo_frightening = ctk.CTkComboBox(frighteningFrame, values=frighteningList)
     combo_frightening.pack()
-
-
-
 
 # FUNCIONES AUXILIARES
 

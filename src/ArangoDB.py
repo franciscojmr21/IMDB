@@ -297,7 +297,6 @@ def consulta(db, title, date, rate, votes, duration, episodes, genre, type, cert
                 sin_espacios = [cadena.strip() for cadena in coincidencias[i][4].split(", ")]
                 if sin_espacios[j] in genre:
                     generosChek.append(coincidencias[i])
-                    print(coincidencias[i])
                     return generosChek
 
     return generosChek
