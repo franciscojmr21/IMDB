@@ -9,6 +9,7 @@ c_negro = '#010101'
 c_gris = '#bbbbbb'
 all_selected_genres = False
 all_selected_types = False
+resultTable = None
  
 def initialize(db): 
     # Crear la ventana principal
@@ -137,10 +138,10 @@ def initialize(db):
         lista_type.insert(tk.END, type)
 
     # Crear la barra de desplazamiento
-    scrollbar = ctk.CTkScrollbar(typeFrame)
-    scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-    lista_type.config(yscrollcommand=scrollbar.set)
-    scrollbar.configure(command=lista_type.yview)
+    typeScrollbar = ctk.CTkScrollbar(typeFrame)
+    typeScrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+    lista_type.config(yscrollcommand=typeScrollbar.set)
+    typeScrollbar.configure(command=lista_type.yview)
 
     # Mostrar la lista de opciones en la ventana
     lista_type.pack()
@@ -296,14 +297,13 @@ def initialize(db):
         Frightening = combo_frightening.get()
 
         results = DB.consulta(db, Title, Date, Rate, Votes, Duration, Episodes, Genre, Type, Certificate, Nudity, Alcohol, Violence, Profanity, Frightening)
-        
-        # expresión regular para extraer la información de cada película
-        expresion = r"{.*?Name': '(.*?)', 'Date': '(.*?)', 'Rate': '(.*?)', 'Votes': (.*?), 'Genre': '(.*?)', 'Duration': (.*?), 'Type': '(.*?)', 'Certificate': '(.*?)', 'Episodes': (.*?), 'Nudity': '(.*?)', 'Violence': '(.*?)', 'Profanity': '(.*?)', 'Alcohol': '(.*?)', 'Frightening': '(.*?)'}"
-        # Buscar todas las coincidencias
-        coincidencias = re.findall(expresion, str(results))
         headers = ["Title", "Date", "Rate", "Votes", "Categories", "Duration", "Type", "Certificate", "Episodes", "Nudity", "Violence", "Profanaty", "Alcohol", "Frightering"]
         # Crear la tabla
-        CTkTable(resulFrame, headers, coincidencias)
+        global resultTable
+        if(resultTable != None):
+            resultTable.remove_table()
+        resulFrame.grid(row=1, column=0)
+        resultTable = CTkTable(resulFrame, headers, results)
         
 
     def combobox_callback(choice):
@@ -380,7 +380,6 @@ def initialize(db):
 
     
     frame.grid(row=0, column=0)
-    resulFrame.grid(row=1, column=0)
 
     ventana.mainloop()  
  

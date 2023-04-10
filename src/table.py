@@ -7,11 +7,11 @@ class CTkTable:
 
         # Crear un canvas para la tabla y agregar barras de desplazamiento
         self.canvas = tk.Canvas(parent)
-        scrollbar_y = tk.Scrollbar(parent, orient=tk.VERTICAL, command=self.canvas.yview)
-        scrollbar_x = tk.Scrollbar(parent, orient=tk.HORIZONTAL, command=self.canvas.xview)
-        self.canvas.configure(yscrollcommand=scrollbar_y.set, xscrollcommand=scrollbar_x.set)
-        scrollbar_y.pack(side=tk.RIGHT, fill=tk.Y)
-        scrollbar_x.pack(side=tk.BOTTOM, fill=tk.X)
+        self.scrollbar_y = tk.Scrollbar(parent, orient=tk.VERTICAL, command=self.canvas.yview)
+        self.scrollbar_x = tk.Scrollbar(parent, orient=tk.HORIZONTAL, command=self.canvas.xview)
+        self.canvas.configure(yscrollcommand=self.scrollbar_y.set, xscrollcommand=self.scrollbar_x.set)
+        self.scrollbar_y.pack(side=tk.RIGHT, fill=tk.Y)
+        self.scrollbar_x.pack(side=tk.BOTTOM, fill=tk.X)
 
         # Agregar la tabla al canvas
         self.table = ttk.Treeview(self.canvas, columns=headers, show='headings')
@@ -32,3 +32,11 @@ class CTkTable:
         canvas_width = max(self.table.winfo_reqwidth(), event.width)
         canvas_height = max(self.table.winfo_reqheight(), event.height)
         self.canvas.configure(scrollregion=(0, 0, canvas_width, canvas_height))
+
+    def remove_table(self):
+        # Borrar la tabla del canvas
+        self.scrollbar_y.pack_forget()
+        self.scrollbar_x.pack_forget()
+        self.table.pack_forget()
+        self.canvas.pack_forget()
+
