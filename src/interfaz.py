@@ -11,11 +11,11 @@ c_gris = '#bbbbbb'
 all_selected_genres = False
 all_selected_types = False
 resultTable = None
- 
+
 def initialize(db): 
     # Crear la ventana principal
     ventana = ctk.CTk()
-    ventana.geometry("1300x600")
+    ventana.geometry("1300x650")
     ventana.title("IMDB")
 
     canvas = ctk.CTkCanvas(ventana, borderwidth=0, highlightthickness=0)
@@ -380,5 +380,3 @@ def initialize(db):
     frame.grid(row=0, column=0)
 
     ventana.mainloop()  
- 
- 

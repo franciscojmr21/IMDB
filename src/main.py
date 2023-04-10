@@ -12,6 +12,9 @@ def main():
     interfaz.initialize(db)
 
 # probar a borrar la base de datos y poner el logo de la app
+# spaninglish
+# case sensitive
+# búsqueda vacía
 
 
 if __name__ == "__main__":

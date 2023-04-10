@@ -249,7 +249,7 @@ def consulta(db, title, date, rate, votes, duration, episodes, genre, type, cert
     # Construir la consulta
     aql = """
            FOR doc IN seriesYPeliculas
-                FILTER (@title == "" OR doc.Name LIKE CONCAT("%", @title, "%"))
+                FILTER (@title == "" OR LOWER(doc.Name) LIKE LOWER(CONCAT("%", @title, "%")))
                 FILTER (@date == "" OR doc.Date >= @date)
                 FILTER (@rate == "" OR doc.Rate >= @rate)
                 FILTER (@votes == "" OR doc.Votes >= @votes)
