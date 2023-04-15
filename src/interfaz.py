@@ -12,11 +12,11 @@ all_selected_genres = False
 all_selected_types = False
 resultTable = None
 
-def initialize(db): 
+def initialize(db, databaseName): 
     # Crear la ventana principal
     ventana = ctk.CTk()
     ventana.geometry("1300x650")
-    ventana.title("IMDB")
+    ventana.title(databaseName)
 
     canvas = ctk.CTkCanvas(ventana, borderwidth=0, highlightthickness=0)
 
@@ -236,7 +236,7 @@ def initialize(db):
 
 # FUNCIONES AUXILIARES
 
-    def getAllValues(db):
+    def getAllValues(db, databaseName):
         Title = caja_texto_title.get()
         
         Date = spinbox_date.getInt()
@@ -293,15 +293,24 @@ def initialize(db):
         Profanity = combo_profanity.get()
         Alcohol = combo_alcohol.get()
         Frightening = combo_frightening.get()
-
-        results = DB.consulta(db, Title, Date, Rate, Votes, Duration, Episodes, Genre, Type, Certificate, Nudity, Alcohol, Violence, Profanity, Frightening)
+        etiquetaResult = ctk.CTkLabel(resulFrame, text="No se ha encontrado ningún resultado en la búsqueda", font=("Arial", 15))
+        results = DB.consulta(db, Title, Date, Rate, Votes, Duration, Episodes, Genre, Type, Certificate, Nudity, Alcohol, Violence, Profanity, Frightening, databaseName)
         headers = ["Title", "Date", "Rate", "Votes", "Categories", "Duration", "Type", "Certificate", "Episodes", "Nudity", "Violence", "Profanaty", "Alcohol", "Frightering"]
-        # Crear la tabla
-        global resultTable
-        if(resultTable != None):
-            resultTable.remove_table()
         resulFrame.grid(row=1, column=0)
-        resultTable = CTkTable(resulFrame, headers, results)
+        
+        if (len(results) < 1):
+            print("puta madre")
+            #resulFrame.grid(row=1, column=0)
+            etiquetaResult.pack()
+        
+        else:
+            etiquetaResult.pack_forget()
+            # Crear la tabla
+            global resultTable
+            if(resultTable != None):
+                resultTable.remove_table()
+            #resulFrame.grid(row=1, column=0)
+            resultTable = CTkTable(resulFrame, headers, results)
         
 
     def combobox_callback(choice):
@@ -359,7 +368,7 @@ def initialize(db):
 
 
     # Añadir un botón a la ventana
-    boton = ctk.CTkButton(frame, text="Buscar", command=lambda: getAllValues(db))
+    boton = ctk.CTkButton(frame, text="Buscar", command=lambda: getAllValues(db, databaseName))
 
     # Ubicar el botón en la ventana
     boton.pack(side="bottom", padx=10, pady=10)

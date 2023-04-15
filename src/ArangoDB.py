@@ -9,23 +9,13 @@ def connect():
     conn = Connection(arangoURL='http://localhost:8529', username='root', password='root')
     return conn  
 
-def create(conn):
+def create(conn, databaseName):
 
-    # Crear una nueva base de datos en caso de que no este ya creada
-    if not conn.hasDatabase('IMDB'):
-        db = conn.createDatabase(name='IMDB')
-        print(f'Se ha creado la base de datos IMDB.')
-    else:  
-        db = conn['IMDB']
-        print(f'La base de datos IMDB ya existe.')
+    db = conn.createDatabase(name=databaseName)
+    print(f'Se ha creado la base de datos {databaseName}.')
 
-
-    # Crear una nueva colección en caso de que no este ya creada
-    if not db.hasCollection("seriesYPeliculas"):
-        db.createCollection(name="seriesYPeliculas")
-        print(f'Se ha creado la colección seriesYPeliculas.')
-    else:
-        print(f'La colección seriesYPeliculas ya existe.')
+    db.createCollection(name="seriesYPeliculas")
+    print(f'Se ha creado la colección seriesYPeliculas.')
 
     return db
 
@@ -240,10 +230,9 @@ def maxEpisodes(db):
 
     return max_value
 
-def consulta(db, title, date, rate, votes, duration, episodes, genre, type, certificate, nudity, alcohol, violence, profanity, frightening):
-   
+def consulta(db, title, date, rate, votes, duration, episodes, genre, type, certificate, nudity, alcohol, violence, profanity, frightening, databaseName):
     conn = Connection(username="root", password="root")
-    db = conn["IMDB"]
+    db = conn[databaseName]
     genre = [cadena.strip() for cadena in genre]
 
     # Construir la consulta
@@ -300,6 +289,12 @@ def consulta(db, title, date, rate, votes, duration, episodes, genre, type, cert
                     return generosChek
 
     return generosChek
+
+
+def dropDatabase(conn, databaseName):
+    url = f'{conn.getURL()}/database/{databaseName}'
+    conn.session.delete(url)
+    print(f'Base de datos {databaseName} borrada correctamente')
 
 
 

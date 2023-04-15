@@ -1,20 +1,24 @@
 import interfaz as interfaz
 import ArangoDB as DB
+import sys
 
 def main():
-    
-    conn = DB.connect()
-    db = DB.create(conn)
-    if db['seriesYPeliculas'].count() == 0:
-        DB.loadData(db)
+
+    if((len(sys.argv) - 1) != 1):
+        print("Usage: python main.py <databaseName>")
+        return
     else:
-        print("La base de datos ya está cargada")
-    interfaz.initialize(db)
+        databaseName = sys.argv[1]
+        conn = DB.connect()
+        db = DB.create(conn, databaseName)
+        DB.loadData(db)
+        interfaz.initialize(db, databaseName)
+        DB.dropDatabase(conn, databaseName)
 
 # probar a borrar la base de datos y poner el logo de la app
 # spaninglish
-# case sensitive
 # búsqueda vacía
+# dejar espacio a la tabla (margin-top)
 
 
 if __name__ == "__main__":
