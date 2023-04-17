@@ -15,10 +15,10 @@ def main():
         interfaz.initialize(db, databaseName)
         DB.dropDatabase(conn, databaseName)
 
-# poner el logo de la app
+
 # spaninglish
-# búsqueda vacía
-# dejar espacio a la tabla (margin-top)
+# en las funciones select de interfaz.py no se usa el parametro valor (quitar??)
+# los filtros funcionan???
 
 
 if __name__ == "__main__":

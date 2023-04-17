@@ -1,6 +1,5 @@
 import customtkinter as ctk
 import tkinter as tk 
-from tkinter import PhotoImage
 import ArangoDB as DB
 from spinbox import FloatSpinbox
 from listBox import CTkListbox
@@ -12,6 +11,7 @@ c_gris = '#bbbbbb'
 all_selected_genres = False
 all_selected_types = False
 resultTable = None
+resultMessage = None
 
 def initialize(db, databaseName): 
     # Crear la ventana principal
@@ -295,23 +295,29 @@ def initialize(db, databaseName):
         Profanity = combo_profanity.get()
         Alcohol = combo_alcohol.get()
         Frightening = combo_frightening.get()
-        etiquetaResult = ctk.CTkLabel(resulFrame, text="No se ha encontrado ningún resultado en la búsqueda", font=("Arial", 15))
+
+        # Obtener la tabla de resultados previa
+        global resultTable
+        if resultTable:
+            resultTable.remove_table()
+
+        # Obtener el mensaje de resultados previo
+        global resultMessage
+        if resultMessage:
+            resultMessage.destroy()
+
         results = DB.consulta(db, Title, Date, Rate, Votes, Duration, Episodes, Genre, Type, Certificate, Nudity, Alcohol, Violence, Profanity, Frightening, databaseName)
         headers = ["Title", "Date", "Rate", "Votes", "Categories", "Duration", "Type", "Certificate", "Episodes", "Nudity", "Violence", "Profanaty", "Alcohol", "Frightering"]
         resulFrame.grid(row=1, column=0)
         
-        if (len(results) < 1):
-            print("puta madre")
-            #resulFrame.grid(row=1, column=0)
-            etiquetaResult.pack()
-        
+
+        # Verificar si se encontraron resultados
+        if not results:
+            # Mostrar mensaje de no se encontraron resultados
+            resultMessage = ctk.CTkLabel(resulFrame, text="No se encontraron películas que coincidan con la búsqueda.", font=("Arial", 14))
+            resultMessage.pack()
         else:
-            etiquetaResult.pack_forget()
-            # Crear la tabla
-            global resultTable
-            if(resultTable != None):
-                resultTable.remove_table()
-            #resulFrame.grid(row=1, column=0)
+            # Crear la tabla de resultados
             resultTable = CTkTable(resulFrame, headers, results)
         
 
