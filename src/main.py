@@ -17,7 +17,6 @@ def main():
 
 
 # spaninglish
-# en las funciones select de interfaz.py no se usa el parametro valor (quitar??)
 # los filtros funcionan???
 
 

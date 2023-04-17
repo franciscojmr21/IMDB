@@ -2,6 +2,8 @@ from pyArango.connection import *
 from pyArango.query import AQLQuery
 import csv
 import re
+import pandas as pd
+
 
 
 def connect():
@@ -25,7 +27,16 @@ def loadData(db):
 
     collection = db["seriesYPeliculas"]
     
-    
+    # # Antes de cargar los datos, eliminamos aquellas filas que se encuentren duplicadas (mismo titulo) en el archivo CSV usando la libreria Pandas
+    # df = pd.read_csv('../dataset/imdb.csv')
+
+    # df = df[~df.duplicated(keep=False)]
+
+    # # Actualizamos el archivo CSV, ahora sin filas duplicadas
+    # df.to_csv('../dataset/imdb.csv', index=False)
+
+
+
 
     # Abrir el archivo CSV
     print('Cargando datos...')
@@ -258,7 +269,7 @@ def consulta(db, title, date, rate, votes, duration, episodes, genre, type, cert
     bind_vars = {
         "title": title,
         "date": date,
-        "rate": rate,
+        "rate": str(rate),
         "votes": votes,
         "duration": duration,
         "episodes": episodes,
