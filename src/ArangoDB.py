@@ -1,8 +1,6 @@
 from pyArango.connection import *
-from pyArango.query import AQLQuery
 import csv
 import re
-import pandas as pd
 
 
 
@@ -26,17 +24,6 @@ def create(conn, databaseName):
 def loadData(db):
 
     collection = db["seriesYPeliculas"]
-    
-    # # Antes de cargar los datos, eliminamos aquellas filas que se encuentren duplicadas (mismo titulo) en el archivo CSV usando la libreria Pandas
-    # df = pd.read_csv('../dataset/imdb.csv')
-
-    # df = df[~df.duplicated(keep=False)]
-
-    # # Actualizamos el archivo CSV, ahora sin filas duplicadas
-    # df.to_csv('../dataset/imdb.csv', index=False)
-
-
-
 
     # Abrir el archivo CSV
     print('Cargando datos...')
@@ -119,9 +106,9 @@ def genreList(db):
     for i in cursor.result:
         generos= i.split(",")
         for j in generos:
+            j = j.strip() # Eliminar espacios en blanco
             if j not in genre:
                 genre.append(j)
-
     return sorted(genre)
 
 def typeList(db):
@@ -129,6 +116,7 @@ def typeList(db):
     cursor = db.AQLQuery(query, batchSize=100000000, rawResults=True)
     type = []
     for i in cursor.result:
+        i = i.strip() # Eliminar espacios en blanco
         if i not in type:
             type.append(i)
 
@@ -140,6 +128,7 @@ def certificateList(db):
     cursor = db.AQLQuery(query, batchSize=100000000, rawResults=True)
     certificate = []
     for i in cursor.result:
+        i = i.strip() # Eliminar espacios en blanco
         if i not in certificate:
             certificate.append(i)
 
@@ -151,10 +140,9 @@ def nudityList(db):
     cursor = db.AQLQuery(query, batchSize=100000000, rawResults=True)
     nudity = []
     for i in cursor.result:
-        nudities= i.split(",")
-        for j in nudities:
-            if j not in nudity:
-                nudity.append(j)
+        i = i.strip() # Eliminar espacios en blanco
+        if i not in nudity:
+            nudity.append(i)
 
     return ["ALL"]+sorted(nudity)
 
@@ -164,10 +152,9 @@ def violenceList(db):
     cursor = db.AQLQuery(query, batchSize=100000000, rawResults=True)
     violence = []
     for i in cursor.result:
-        violences= i.split(",")
-        for j in violences:
-            if j not in violence:
-                violence.append(j)
+        i = i.strip() # Eliminar espacios en blanco
+        if i not in violence:
+            violence.append(i)
 
     return ["ALL"]+sorted(violence)
 
@@ -179,10 +166,9 @@ def profanityList(db):
     cursor = db.AQLQuery(query, batchSize=100000000, rawResults=True)
     profanity = []
     for i in cursor.result:
-        profanities= i.split(",")
-        for j in profanities:
-            if j not in profanity:
-                profanity.append(j)
+        i = i.strip() # Eliminar espacios en blanco
+        if i not in profanity:
+            profanity.append(i)
 
     return ["ALL"]+sorted(profanity)
 
@@ -192,10 +178,9 @@ def alcoholList(db):
     cursor = db.AQLQuery(query, batchSize=100000000, rawResults=True)
     alcohol = []
     for i in cursor.result:
-        alcoholes= i.split(",")
-        for j in alcoholes:
-            if j not in alcohol:
-                alcohol.append(j)
+        i = i.strip() # Eliminar espacios en blanco
+        if i not in alcohol:
+            alcohol.append(i)
 
     return ["ALL"]+sorted(alcohol)
 
@@ -206,10 +191,9 @@ def frighteningList(db):
     cursor = db.AQLQuery(query, batchSize=100000000, rawResults=True)
     frightening = []
     for i in cursor.result:
-        frighten= i.split(",")
-        for j in frighten:
-            if j not in frightening:
-                frightening.append(j)
+        i = i.strip() # Eliminar espacios en blanco
+        if i not in frightening:
+            frightening.append(i)
 
     return ["ALL"]+sorted(frightening)
 

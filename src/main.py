@@ -10,15 +10,13 @@ def main():
     else:
         databaseName = sys.argv[1]
         conn = DB.connect()
+        DB.dropDatabase(conn, databaseName)
         db = DB.create(conn, databaseName)
         DB.loadData(db)
         interfaz.initialize(db, databaseName)
-        DB.dropDatabase(conn, databaseName)
 
 
 # spaninglish
-# los filtros funcionan???
-
 
 if __name__ == "__main__":
     main()

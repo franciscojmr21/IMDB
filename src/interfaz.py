@@ -16,7 +16,7 @@ resultMessage = None
 def initialize(db, databaseName): 
     # Crear la ventana principal
     ventana = ctk.CTk()
-    ventana.geometry("1300x650")
+    ventana.geometry("1450x650")
     ventana.title(databaseName)
         
 
