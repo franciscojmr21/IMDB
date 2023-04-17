@@ -5,7 +5,7 @@ import sys
 def main():
 
     if((len(sys.argv) - 1) != 1):
-        print("Usage: python main.py <databaseName>")
+        print("Debes especificar el nombre de la base de datos")
         return
     else:
         databaseName = sys.argv[1]
@@ -15,7 +15,7 @@ def main():
         interfaz.initialize(db, databaseName)
         DB.dropDatabase(conn, databaseName)
 
-# probar a borrar la base de datos y poner el logo de la app
+# poner el logo de la app
 # spaninglish
 # búsqueda vacía
 # dejar espacio a la tabla (margin-top)

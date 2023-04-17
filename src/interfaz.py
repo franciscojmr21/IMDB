@@ -1,5 +1,6 @@
 import customtkinter as ctk
 import tkinter as tk 
+from tkinter import PhotoImage
 import ArangoDB as DB
 from spinbox import FloatSpinbox
 from listBox import CTkListbox
@@ -17,6 +18,7 @@ def initialize(db, databaseName):
     ventana = ctk.CTk()
     ventana.geometry("1300x650")
     ventana.title(databaseName)
+        
 
     canvas = ctk.CTkCanvas(ventana, borderwidth=0, highlightthickness=0)
 
@@ -388,4 +390,5 @@ def initialize(db, databaseName):
     
     frame.grid(row=0, column=0)
 
+    ventana.iconbitmap("../imagenes/imdb.ico")
     ventana.mainloop()  
