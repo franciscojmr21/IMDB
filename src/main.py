@@ -13,6 +13,7 @@ def main():
         DB.dropDatabase(conn, databaseName)
         db = DB.create(conn, databaseName)
         DB.loadData(db)
+        DB.cretateIndexes(db)
         interfaz.initialize(db, databaseName)
 
 if __name__ == "__main__":
