@@ -1,7 +1,6 @@
 from pyArango.connection import *
 import csv
 import re
-import pandas as pd
 
 
 
@@ -278,20 +277,12 @@ def consulta(db, title, date, rate, votes, duration, episodes, genre, type, cert
     cursor = db.AQLQuery(aql, bindVars=bind_vars)
     results = [document for document in cursor]
     # expresión regular para extraer la información de cada película
-    expresion = r"{.*?Name': '(.*?)', 'Date': '(.*?)', 'Rate': '(.*?)', 'Votes': (.*?), 'Genre': '(.*?)', 'Duration': (.*?), 'Type': '(.*?)', 'Certificate': '(.*?)', 'Episodes': (.*?), 'Nudity': '(.*?)', 'Violence': '(.*?)', 'Profanity': '(.*?)', 'Alcohol': '(.*?)', 'Frightening': '(.*?)'}"
+    expresion = r"{.*?Name': '(.*?)', 'Date': '(.*?)', 'Rate': '(.*?)', 'Votes': (.*?), 'Genre': (.*?), 'Duration': (.*?), 'Type': '(.*?)', 'Certificate': '(.*?)', 'Episodes': (.*?), 'Nudity': '(.*?)', 'Violence': '(.*?)', 'Profanity': '(.*?)', 'Alcohol': '(.*?)', 'Frightening': '(.*?)'}"
     # Buscar todas las coincidencias
     coincidencias = re.findall(expresion, str(results))
-    generosChek = re.findall(expresion, str(results))
-    # if len(genre)>0:
-    #     generosChek.clear()
-    #     for i in range(len(coincidencias)):
-    #         for j in range(len(coincidencias[i][4].split(","))):
-    #             sin_espacios = [cadena.strip() for cadena in coincidencias[i][4].split(", ")]
-    #             if sin_espacios[j] in genre:
-    #                 generosChek.append(coincidencias[i])
-    #                 return generosChek
-    print(generosChek)
-    return generosChek
+     # Eliminar corchetes y espacios
+    #generos = coincidencias[0][4].replace("[", "").replace("]", "")
+    return coincidencias
 
 
 def dropDatabase(conn, databaseName):
