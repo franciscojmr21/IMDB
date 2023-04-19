@@ -15,9 +15,6 @@ def main():
         DB.loadData(db)
         interfaz.initialize(db, databaseName)
 
-
-# spaninglish
-
 if __name__ == "__main__":
     main()
 

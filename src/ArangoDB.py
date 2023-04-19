@@ -1,6 +1,7 @@
 from pyArango.connection import *
 import csv
 import re
+import pandas as pd
 
 
 
@@ -49,7 +50,15 @@ def loadData(db):
             else:
                 data['Votes'] = int(fila[3].replace(",", ""))
 
-            data['Genre'] = fila[4]
+            genreList = fila[4]
+            genreList = genreList.split(",") # Separar los géneros por comas
+            genreList_OK = []
+            for i in genreList:
+                i = i.lstrip()
+                i = i.rstrip()
+                genreList_OK.append(i)
+
+            data['Genre'] = genreList_OK
 
             if fila[5] == 'None':
                 data['Duration'] = 0
@@ -104,8 +113,7 @@ def genreList(db):
     cursor = db.AQLQuery(query, batchSize=100000000, rawResults=True)
     genre = []
     for i in cursor.result:
-        generos= i.split(",")
-        for j in generos:
+        for j in i:
             j = j.strip() # Eliminar espacios en blanco
             if j not in genre:
                 genre.append(j)
@@ -227,8 +235,6 @@ def maxEpisodes(db):
 
 def consulta(db, title, date, rate, votes, duration, episodes, genre, type, certificate, nudity, alcohol, violence, profanity, frightening, databaseName):
     conn = Connection(username="root", password="root")
-    db = conn[databaseName]
-    genre = [cadena.strip() for cadena in genre]
 
     # Construir la consulta
     aql = """
@@ -239,6 +245,7 @@ def consulta(db, title, date, rate, votes, duration, episodes, genre, type, cert
                 FILTER (@votes == "" OR doc.Votes >= @votes)
                 FILTER (@duration == "" OR doc.Duration >= @duration)
                 FILTER (@episodes == "" OR doc.Episodes >= @episodes)
+                FILTER (doc.Genre ANY IN @genre OR @genre == [])
                 FILTER (doc.Type IN @type OR @type == [])
                 FILTER (@certificate == "ALL" OR doc.Certificate == @certificate)
                 FILTER (@nudity == "ALL" OR doc.Nudity == @nudity)
@@ -252,6 +259,7 @@ def consulta(db, title, date, rate, votes, duration, episodes, genre, type, cert
     # Definir los parámetros de la consulta
     bind_vars = {
         "title": title,
+        "genre": genre,
         "date": date,
         "rate": str(rate),
         "votes": votes,
@@ -274,15 +282,15 @@ def consulta(db, title, date, rate, votes, duration, episodes, genre, type, cert
     # Buscar todas las coincidencias
     coincidencias = re.findall(expresion, str(results))
     generosChek = re.findall(expresion, str(results))
-    if len(genre)>0:
-        generosChek.clear()
-        for i in range(len(coincidencias)):
-            for j in range(len(coincidencias[i][4].split(","))):
-                sin_espacios = [cadena.strip() for cadena in coincidencias[i][4].split(", ")]
-                if sin_espacios[j] in genre:
-                    generosChek.append(coincidencias[i])
-                    return generosChek
-
+    # if len(genre)>0:
+    #     generosChek.clear()
+    #     for i in range(len(coincidencias)):
+    #         for j in range(len(coincidencias[i][4].split(","))):
+    #             sin_espacios = [cadena.strip() for cadena in coincidencias[i][4].split(", ")]
+    #             if sin_espacios[j] in genre:
+    #                 generosChek.append(coincidencias[i])
+    #                 return generosChek
+    print(generosChek)
     return generosChek
 
 
