@@ -232,57 +232,41 @@ def maxEpisodes(db):
 
     return max_value
 
+def cretateIndexes(db):
+    print("Creando índices...")
+    collection = db["seriesYPeliculas"]
+    # Crear el índice hash para un campo string
+    collection.ensureHashIndex(fields=["Name"])
+    collection.ensureHashIndex(fields=["Type"])
+    collection.ensureHashIndex(fields=["Certificate"])
+    collection.ensureHashIndex(fields=["Nudity"])
+    collection.ensureHashIndex(fields=["Alcohol"])
+    collection.ensureHashIndex(fields=["Violence"])
+    collection.ensureHashIndex(fields=["Profanity"])
+    collection.ensureHashIndex(fields=["Frightening"])
+    # Crear el índice skiplist para un campo nunérico
+    collection.ensureSkiplistIndex(fields=["Rate"])
+    collection.ensureSkiplistIndex(fields=["Date"])
+    collection.ensureSkiplistIndex(fields=["Votes"])
+    collection.ensureSkiplistIndex(fields=["Duration"])
+    # Crear el índice hash para una lista de strings
+    collection.ensureSkiplistIndex(fields=["Genre[*]"])
+
+    print("Índices creados")
+
+
+
+
 def consulta(db, title, date, rate, votes, duration, episodes, genre, type, certificate, nudity, alcohol, violence, profanity, frightening, databaseName):
-    conn = Connection(username="root", password="root")
+    expresion = {"Name": {title}, "Date": {date}, "Rate": {rate}, "Votes": {votes}, "Genre": {genre}, "Duration": {duration}, "Type": {type}, "Certificate": {certificate}, "Episodes": {episodes}, "Nudity": {nudity}, "Violence": {violence}, "Profanity": {profanity}, "Alcohol": {alcohol}, "Frightening": {frightening}}
+    
+    # Crear un objeto de ejemplo con el campo "Rate" especificado para utilizar el índice skip-list
+    example_obj = {"Rate": {"$gte": 8.5}, "use_index": "Rate"}
 
-    # Construir la consulta
-    aql = """
-           FOR doc IN seriesYPeliculas
-                FILTER (@title == "" OR LOWER(doc.Name) LIKE LOWER(CONCAT("%", @title, "%")))
-                FILTER (@date == "" OR doc.Date >= @date)
-                FILTER (@rate == "" OR doc.Rate >= @rate)
-                FILTER (@votes == "" OR doc.Votes >= @votes)
-                FILTER (@duration == "" OR doc.Duration >= @duration)
-                FILTER (@episodes == "" OR doc.Episodes >= @episodes)
-                FILTER (doc.Genre ANY IN @genre OR @genre == [])
-                FILTER (doc.Type IN @type OR @type == [])
-                FILTER (@certificate == "ALL" OR doc.Certificate == @certificate)
-                FILTER (@nudity == "ALL" OR doc.Nudity == @nudity)
-                FILTER (@alcohol == "ALL" OR doc.Alcohol == @alcohol)
-                FILTER (@violence == "ALL" OR doc.Violence == @violence)
-                FILTER (@profanity == "ALL" OR doc.Profanity == @profanity)
-                FILTER (@frightening == "ALL" OR doc.Frightening == @frightening)
-                RETURN doc
-                """
+    # Realizar la consulta utilizando el índice skip-list en el campo "Rate"
+    results = db.fetchByExample(example_obj)
 
-    # Definir los parámetros de la consulta
-    bind_vars = {
-        "title": title,
-        "genre": genre,
-        "date": date,
-        "rate": str(rate),
-        "votes": votes,
-        "duration": duration,
-        "episodes": episodes,
-        "type": type,
-        "certificate": certificate,
-        "nudity": nudity,
-        "alcohol": alcohol,
-        "violence": violence,
-        "profanity": profanity,
-        "frightening": frightening
-        }
-
-    # Ejecutar la consulta
-    cursor = db.AQLQuery(aql, bindVars=bind_vars)
-    results = [document for document in cursor]
-    # expresión regular para extraer la información de cada película
-    expresion = r"{.*?Name': '(.*?)', 'Date': '(.*?)', 'Rate': '(.*?)', 'Votes': (.*?), 'Genre': (.*?), 'Duration': (.*?), 'Type': '(.*?)', 'Certificate': '(.*?)', 'Episodes': (.*?), 'Nudity': '(.*?)', 'Violence': '(.*?)', 'Profanity': '(.*?)', 'Alcohol': '(.*?)', 'Frightening': '(.*?)'}"
-    # Buscar todas las coincidencias
-    coincidencias = re.findall(expresion, str(results))
-     # Eliminar corchetes y espacios
-    #generos = coincidencias[0][4].replace("[", "").replace("]", "")
-    return coincidencias
+    return results
 
 
 def dropDatabase(conn, databaseName):
