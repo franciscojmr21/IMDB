@@ -236,14 +236,14 @@ def cretateIndexes(db):
     print("Creando índices...")
     collection = db["seriesYPeliculas"]
     # Crear el índice hash para un campo string
-    collection.ensureHashIndex(fields=["Name"])
-    collection.ensureHashIndex(fields=["Type"])
-    collection.ensureHashIndex(fields=["Certificate"])
-    collection.ensureHashIndex(fields=["Nudity"])
-    collection.ensureHashIndex(fields=["Alcohol"])
-    collection.ensureHashIndex(fields=["Violence"])
-    collection.ensureHashIndex(fields=["Profanity"])
-    collection.ensureHashIndex(fields=["Frightening"])
+    collection.ensurePersistentIndex(fields=["Name"], unique=False, sparse=False)
+    collection.ensurePersistentIndex(fields=["Type"], unique=False, sparse=False)
+    collection.ensurePersistentIndex(fields=["Certificate"], unique=False, sparse=False)
+    collection.ensurePersistentIndex(fields=["Nudity"], unique=False, sparse=False)
+    collection.ensurePersistentIndex(fields=["Alcohol"], unique=False, sparse=False)
+    collection.ensurePersistentIndex(fields=["Violence"], unique=False, sparse=False)
+    collection.ensurePersistentIndex(fields=["Profanity"], unique=False, sparse=False)
+    collection.ensurePersistentIndex(fields=["Frightening"], unique=False, sparse=False)
     # Crear el índice skiplist para un campo nunérico
     collection.ensureSkiplistIndex(fields=["Rate"])
     collection.ensureSkiplistIndex(fields=["Date"])
@@ -261,7 +261,7 @@ def consulta(db, title, date, rate, votes, duration, episodes, genre, type, cert
     expresion = {"Name": {title}, "Date": {date}, "Rate": {rate}, "Votes": {votes}, "Genre": {genre}, "Duration": {duration}, "Type": {type}, "Certificate": {certificate}, "Episodes": {episodes}, "Nudity": {nudity}, "Violence": {violence}, "Profanity": {profanity}, "Alcohol": {alcohol}, "Frightening": {frightening}}
     
     # Crear un objeto de ejemplo con el campo "Rate" especificado para utilizar el índice skip-list
-    example_obj = {"Rate": {"$gte": 8.5}, "use_index": "Rate"}
+    example_obj = {"Rate": {"$gte": 8.5}, "use_index": "Rate"}  # creo que no hace falta obligar a que use el indice
 
     # Realizar la consulta utilizando el índice skip-list en el campo "Rate"
     results = db.fetchByExample(example_obj)
