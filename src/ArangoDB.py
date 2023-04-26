@@ -314,7 +314,8 @@ def consulta(db, title, date, rate, votes, duration, episodes, genre, type, cert
     print("Consulta construida correctamente")
     # Ejecutar la consulta
     cursor = db.AQLQuery(aql, bindVars=bind_vars)
-    print("Consulta realizada correctamente")
+    
+    
     results = [document for document in cursor]
      # expresión regular para extraer la información de cada película
     expresion = r"{.*?Name': '(.*?)', 'Date': '(.*?)', 'Rate': '(.*?)', 'Votes': (.*?), 'Genre': (.*?), 'Duration': (.*?), 'Type': '(.*?)', 'Certificate': '(.*?)', 'Episodes': (.*?), 'Nudity': '(.*?)', 'Violence': '(.*?)', 'Profanity': '(.*?)', 'Alcohol': '(.*?)', 'Frightening': '(.*?)'}"
@@ -322,6 +323,7 @@ def consulta(db, title, date, rate, votes, duration, episodes, genre, type, cert
     coincidencias = re.findall(expresion, str(results))
     print("Resultados obtenidos correctamente")
     return coincidencias
+
 
 
 def dropDatabase(conn, databaseName):

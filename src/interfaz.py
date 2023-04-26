@@ -5,6 +5,7 @@ from spinbox import FloatSpinbox
 from listBox import CTkListbox
 from table import CTkTable
 import re
+import timeit
 
 c_negro = '#010101'
 c_gris = '#bbbbbb'
@@ -305,8 +306,9 @@ def initialize(db, databaseName):
         global resultMessage
         if resultMessage:
             resultMessage.destroy()
-
         results = DB.consulta(db, Title, Date, Rate, Votes, Duration, Episodes, Genre, Type, Certificate, Nudity, Alcohol, Violence, Profanity, Frightening, databaseName)
+        t = timeit.timeit(lambda: DB.consulta(db, Title, Date, Rate, Votes, Duration, Episodes, Genre, Type, Certificate, Nudity, Alcohol, Violence, Profanity, Frightening, databaseName), number=1)
+        print(t)
         headers = ["Title", "Date", "Rate", "Votes", "Categories", "Duration", "Type", "Certificate", "Episodes", "Nudity", "Violence", "Profanaty", "Alcohol", "Frightering"]
         resulFrame.grid(row=1, column=0)
         
