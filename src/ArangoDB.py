@@ -258,15 +258,70 @@ def cretateIndexes(db):
 
 
 def consulta(db, title, date, rate, votes, duration, episodes, genre, type, certificate, nudity, alcohol, violence, profanity, frightening, databaseName):
-    expresion = {"Name": {title}, "Date": {date}, "Rate": {rate}, "Votes": {votes}, "Genre": {genre}, "Duration": {duration}, "Type": {type}, "Certificate": {certificate}, "Episodes": {episodes}, "Nudity": {nudity}, "Violence": {violence}, "Profanity": {profanity}, "Alcohol": {alcohol}, "Frightening": {frightening}}
+    print("Realizando consulta...")
+
+    """expresion = {"Name": title, "Date": date, "Rate": rate, "Votes": votes, "Genre": genre, "Duration": duration, "Type": type, "Certificate": certificate, "Episodes": episodes, "Nudity": nudity, "Violence": violence, "Profanity": profanity, "Alcohol": alcohol, "Frightening": frightening}
+
     
     # Crear un objeto de ejemplo con el campo "Rate" especificado para utilizar el índice skip-list
-    example_obj = {"Rate": {"$gte": 8.5}, "use_index": "Rate"}  # creo que no hace falta obligar a que use el indice
+    #example_obj = {"Rate": {"$gte": 8.5}, "use_index": "Rate"}  # creo que no hace falta obligar a que use el indice
 
     # Realizar la consulta utilizando el índice skip-list en el campo "Rate"
-    results = db.fetchByExample(example_obj)
+    results = db.fetchByExample(expresion)
 
-    return results
+    return results"""
+
+    conn = Connection(username="root", password="root")
+    db = conn[databaseName]
+    genre = [cadena.strip() for cadena in genre]
+
+    # Construir la consulta
+    aql = """
+           FOR doc IN seriesYPeliculas
+                FILTER (@title == "" OR LOWER(doc.Name) LIKE LOWER(CONCAT("%", @title, "%")))
+                FILTER (@date == "" OR doc.Date >= @date)
+                FILTER (@rate == "" OR doc.Rate >= @rate)
+                FILTER (@votes == "" OR doc.Votes >= @votes)
+                FILTER (@duration == "" OR doc.Duration >= @duration)
+                FILTER (@episodes == "" OR doc.Episodes >= @episodes)
+                FILTER (doc.Type IN @type OR @type == [])
+                FILTER (@certificate == "ALL" OR doc.Certificate == @certificate)
+                FILTER (@nudity == "ALL" OR doc.Nudity == @nudity)
+                FILTER (@alcohol == "ALL" OR doc.Alcohol == @alcohol)
+                FILTER (@violence == "ALL" OR doc.Violence == @violence)
+                FILTER (@profanity == "ALL" OR doc.Profanity == @profanity)
+                FILTER (@frightening == "ALL" OR doc.Frightening == @frightening)
+                RETURN doc
+                """
+
+    # Definir los parámetros de la consulta
+
+    bind_vars = {
+        "title": title,
+        "date": date,
+        "rate": str(rate),
+        "votes": votes,
+        "duration": duration,
+        "episodes": episodes,
+        "type": type,
+        "certificate": certificate,
+        "nudity": nudity,
+        "alcohol": alcohol,
+        "violence": violence,
+        "profanity": profanity,
+        "frightening": frightening
+        }
+    print("Consulta construida correctamente")
+    # Ejecutar la consulta
+    cursor = db.AQLQuery(aql, bindVars=bind_vars)
+    print("Consulta realizada correctamente")
+    results = [document for document in cursor]
+     # expresión regular para extraer la información de cada película
+    expresion = r"{.*?Name': '(.*?)', 'Date': '(.*?)', 'Rate': '(.*?)', 'Votes': (.*?), 'Genre': (.*?), 'Duration': (.*?), 'Type': '(.*?)', 'Certificate': '(.*?)', 'Episodes': (.*?), 'Nudity': '(.*?)', 'Violence': '(.*?)', 'Profanity': '(.*?)', 'Alcohol': '(.*?)', 'Frightening': '(.*?)'}"
+    # Buscar todas las coincidencias
+    coincidencias = re.findall(expresion, str(results))
+    print("Resultados obtenidos correctamente")
+    return coincidencias
 
 
 def dropDatabase(conn, databaseName):
